@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Country;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -98,5 +101,20 @@ class AccountController extends Controller
         ]);
     }
 
-   
+    public function edit($id){
+        $user=User::where('id',$id)->first();
+        $countries=Country::orderBy('name','ASC')->get();
+        $states=State::where('country_id', $user->country)->orderBy('name','ASC')->get();
+        $cities=City::where('state_id', $user->state)->orderBy('name','ASC')->get();
+
+        if($user == null){
+            return redirect(url('/list'));
+        }
+        return view("user.edit",[
+            'user'=>$user,
+            'countries'=>$countries,
+            'states'=>$states,
+            'cities'=>$cities,
+        ]);
+    }
 }
