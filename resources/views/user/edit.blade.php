@@ -75,9 +75,68 @@
             </div>
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+     $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+     });
 
+     $(document).ready(function() {
+            $("#country").change(function() {
+                var country_id = $(this).val();
+ 
+                if (country_id == "") {
+                    var country_id = 0;
+                }
+ 
+                $.ajax({
+                    url: '{{ url("/fetch-state/") }}/' + country_id,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#state').find('option:not(:first)').remove();
+                        $('#city').find('option:not(:first)').remove();
+ 
+                        if (response['states'].length > 0) {
+                            $.each(response['states'], function(key, value) {
+                                $("#state").append("<option value='" + value['id'] + "'>" + value['name'] + "</option>")
+                            });
+                        }
+                    }
+                });
+            });
+
+            $("#state").change(function() {
+                var state_id = $(this).val();
+ 
+                console.log(state_id);
+ 
+                if (state_id == "") {
+                    var state_id = 0;
+                }
+ 
+                $.ajax({
+                    url: '{{ url("/fetch-cities/") }}/' + state_id,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#city').find('option:not(:first)').remove();
+ 
+                        if (response['cities'].length > 0) {
+                            $.each(response['cities'], function(key, value) {
+                                $("#city").append("<option value='" + value['id'] + "'>" + value['name'] + "</option>")
+                            });
+                        }
+                    }
+                });
+            });
+     });
+
+
+</script>
     
 
 </body>
