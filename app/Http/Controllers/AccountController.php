@@ -117,4 +117,41 @@ class AccountController extends Controller
             'cities'=>$cities,
         ]);
     }
+
+    public function update($id, Request $request){
+        $user = User::find($id);
+        if($user == null) {
+            //   $request->session()->flash('error','Enither user deleted or not found.');
+            return response()->json([
+                'status' =>  '400'               
+            ]);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        if ($validator->passes()) {
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->country = $request->country;
+            $user->state = $request->state;
+            $user->city = $request->city;
+            $user->save(); 
+        
+            // $request->session()->flash('success','User updated successfully.');
+            return response()->json([
+                'status' =>  1                
+            ]);
+ 
+        } else {
+            return response()->json([
+                'status' =>  0,
+                'errors' => $validator->errors()
+            ]);
+        }
+ 
+    }
+
 }

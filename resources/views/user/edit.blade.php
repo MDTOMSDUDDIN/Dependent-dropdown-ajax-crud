@@ -135,7 +135,36 @@
             });
      });
 
-
+     $("#frm").submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                url: '{{ url("/update/".$user->id) }}',
+                type: 'post',
+                data: $("#frm").serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response['status'] == 1) {
+                        window.location.href = "{{ url('list') }}";
+                    } else {
+                        if (response['errors']['name']) {
+                            $("#name").addClass('is-invalid');
+                            $("#name-error").html(response['errors']['name']);
+                        } else {
+                            $("#name").removeClass('is-invalid');
+                            $("#name-error").html("");
+                        }
+ 
+                        if (response['errors']['email']) {
+                            $("#email").addClass('is-invalid');
+                            $("#email-error").html(response['errors']['email']);
+                        } else {
+                            $("#email").removeClass('is-invalid');
+                            $("#email-error").html("");
+                        }
+                    }
+                }
+            });
+     })
 </script>
     
 

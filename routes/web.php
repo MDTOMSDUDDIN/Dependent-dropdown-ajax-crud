@@ -15,3 +15,4 @@ Route::post('/fetch-cities/{id}', [AccountController::class, 'fetchCities']);
 Route::post('/save', [AccountController::class, 'save']);
 
 Route::get('/edit/{id}', [AccountController::class, 'edit'])->name('edit.user');
+Route::post('/update/{id}', [AccountController::class, 'update'])->name('update.user');
