@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="_token" content="{{ csrf_token() }}">
 </head>
+
 <body>
     <div class="bg p-3  shadow-lg text-center" >
         <h3 class="text-center">Dependent Dropdwon Ajax Crud</h3>
@@ -121,10 +122,42 @@
                             $("#city").append("<option value='"+value['id']+"' > "+ value['name'] + "</option>");
                         });
                     }
-                },
+                }
             });
         });
     });
+//create |save-------------------------------------------------
+    $("#frm").submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '{{ url("/save") }}',
+                type: 'post',
+                data: $("#frm").serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    alert(response['status']);
+                    if (response['status'] == 1) {
+                        window.location.href = "{{ url('/list') }}";
+                    } else {
+                        if (response['errors']['name']) {
+                            $("#name").addClass('is-invalid');
+                            $("#name-error").html(response['errors']['name']);
+                        } else {
+                            $("#name").removeClass('is-invalid');
+                            $("#name-error").html("");
+                        }
+
+                        if (response['errors']['email']) {
+                            $("#email").addClass('is-invalid');
+                            $("#email-error").html(response['errors']['email']);
+                        } else {
+                            $("#email").removeClass('is-invalid');
+                            $("#email-error").html("");
+                        }
+                    }
+                }
+            });
+        })
 
  </script>
 </body>

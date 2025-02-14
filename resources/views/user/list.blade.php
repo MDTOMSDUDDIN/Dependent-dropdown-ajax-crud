@@ -45,6 +45,9 @@
                                     <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>
+                                       <a href="#" class="btn btn-primary">Edit</a>
+                                    </td>
                                   </tr>
                                   @endforeach
                               @endif
